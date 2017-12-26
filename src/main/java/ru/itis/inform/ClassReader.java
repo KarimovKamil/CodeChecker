@@ -15,18 +15,18 @@ public class ClassReader {
                 .getResource(pkg.replace('.', '/')).getFile());
         File[] files = dir.listFiles();
 
-        for (int i = 0; i < files.length; i++) {
-            if (files[i].isDirectory()) {
-                ArrayList<Class> list = getClassesInPackage(pkg + "." + files[i].getName());
-                for (int j = 0; j < list.size(); j++) {
-                    classes.add(list.get(j));
-                }
-            } else {
-                try {
-                    classes.add(Class.forName(pkg + "." + files[i].getName()
-                            .substring(0, files[i].getName().length() - 6)));
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
+        if (files != null) {
+            for (int i = 0; i < files.length; i++) {
+                if (files[i].isDirectory()) {
+                    ArrayList<Class> list = getClassesInPackage(pkg + "." + files[i].getName());
+                    classes.addAll(list);
+                } else {
+                    try {
+                        classes.add(Class.forName(pkg + "." + files[i].getName()
+                                .substring(0, files[i].getName().length() - 6)));
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }

@@ -12,7 +12,6 @@ import java.util.List;
  */
 public class EntityFieldChecker implements Checker {
 
-
     public String start(ArrayList<Class> classes) {
         List<Class> entityClasses = new ArrayList<>();
         for (Class aClass : classes) {

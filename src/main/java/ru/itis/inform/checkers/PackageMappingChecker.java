@@ -1,5 +1,6 @@
 package ru.itis.inform.checkers;
 
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,56 +21,75 @@ public class PackageMappingChecker implements Checker {
         Pattern controllerPattern = Pattern.compile(".*(C|c)ontroller.*");
         Pattern daoPattern = Pattern.compile(".*(D|d)ao.*");
         Pattern repositoryPattern = Pattern.compile(".*(R|r)epository.*");
-        Matcher pkgMatcher;
-        Matcher classMatcher;
-        for (Class aClass : classes) {
-            int count = 0;
-            String classCanonicalName = aClass.getCanonicalName();
-            String className = aClass.getSimpleName();
-            int index = classCanonicalName.lastIndexOf('.');
-            String pkg = classCanonicalName.substring(0, index);
+        next:
+        for (Class currentClass : classes) {
+            String className = currentClass.getSimpleName();
+            int index = currentClass.getCanonicalName().lastIndexOf('.');
+            String pkg = currentClass.getCanonicalName().substring(0, index);
+            Annotation[] annotations = currentClass.getAnnotations();
 
-            pkgMatcher = servicePattern.matcher(pkg);
-            classMatcher = servicePattern.matcher(className);
-            if (classMatcher.matches()) {
-                if (!pkgMatcher.matches()) {
-                    return NEG_RESULT;
+            Matcher servicePkgMatcher = servicePattern.matcher(pkg);
+            Matcher serviceClassMatcher = servicePattern.matcher(className);
+            Matcher controllerPkgMatcher = controllerPattern.matcher(pkg);
+            Matcher controllerClassMatcher = controllerPattern.matcher(className);
+            Matcher daoPkgMatcher = daoPattern.matcher(pkg);
+            Matcher daoClassMatcher = daoPattern.matcher(className);
+            Matcher repositoryPkgMatcher = repositoryPattern.matcher(pkg);
+            Matcher repositoryClassMatcher = repositoryPattern.matcher(className);
+
+            if (servicePkgMatcher.matches()) {
+                if (serviceClassMatcher.matches()) {
+                    continue;
                 }
-            } else {
-                count++;
-            }
-
-            pkgMatcher = controllerPattern.matcher(pkg);
-            classMatcher = controllerPattern.matcher(className);
-            if (classMatcher.matches()) {
-                if (!pkgMatcher.matches()) {
-                    return NEG_RESULT;
+                else {
+                    for (Annotation annotation : annotations) {
+                        if (annotation instanceof Service) {
+                            continue next;
+                        }
+                    }
                 }
-            } else {
-                count++;
+                return NEG_RESULT;
             }
-
-            pkgMatcher = daoPattern.matcher(pkg);
-            classMatcher = daoPattern.matcher(className);
-            if (classMatcher.matches()) {
-                if (!pkgMatcher.matches()) {
-                    return NEG_RESULT;
+            else if (controllerPkgMatcher.matches()) {
+                if (controllerClassMatcher.matches()) {
+                    continue;
                 }
-            } else {
-                count++;
-            }
-
-            pkgMatcher = repositoryPattern.matcher(pkg);
-            classMatcher = repositoryPattern.matcher(className);
-            if (classMatcher.matches()) {
-                if (!pkgMatcher.matches()) {
-                    return NEG_RESULT;
+                else {
+                    for (Annotation annotation : annotations) {
+                        if (annotation instanceof Controller) {
+                            continue next;
+                        }
+                    }
                 }
-            } else {
-                count++;
+                return NEG_RESULT;
             }
-
-            if (count == 4) {
+            else if (daoPkgMatcher.matches()) {
+                if (daoClassMatcher.matches()) {
+                    continue;
+                }
+                else {
+                    for (Annotation annotation : annotations) {
+                        if (annotation instanceof Repository) {
+                            continue next;
+                        }
+                    }
+                }
+                return NEG_RESULT;
+            }
+            else if (repositoryPkgMatcher.matches()) {
+                if (repositoryClassMatcher.matches()) {
+                    continue;
+                }
+                else {
+                    for (Annotation annotation : annotations) {
+                        if (annotation instanceof Repository) {
+                            continue next;
+                        }
+                    }
+                }
+                return NEG_RESULT;
+            }
+            else {
                 return NEG_RESULT;
             }
         }

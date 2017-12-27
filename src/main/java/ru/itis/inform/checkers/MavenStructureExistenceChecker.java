@@ -1,12 +1,141 @@
 package ru.itis.inform.checkers;
 
-import java.util.ArrayList;
+
+import java.io.File;
+import java.util.*;
 
 /**
  * Created by Kamil Karimov on 26.12.2017.
  */
 public class MavenStructureExistenceChecker implements Checker {
-    public String start(ArrayList<Class> classes) {
-        return null;
+
+    private static final String POM = "pom.xml";
+    private static final String SRC = "src";
+    private static final String MAIN = "main";
+    private static final String TEST = "test";
+    private static final String IT = "it";
+    private static final String SITE = "site";
+    private static final String ASSEMBLY = "assembly";
+
+    private static final String LICENSE = "LICENSE.txt";
+    private static final String NOTICE = "NOTICE.txt";
+    private static final String README = "README.txt";
+
+    private static final String TARGET = "target";
+
+    private String[] mainDir = {"java", "resources", "config", "scripts", "webapp"};
+    private String[] testDir = {"java", "resources"};
+
+    private String userDir;
+    private Set<String> packages = new TreeSet<>();
+
+    public MavenStructureExistenceChecker() {
+        this.userDir = System.getProperty("user.dir");
     }
+
+    public MavenStructureExistenceChecker(String projectPath) {
+        this.userDir = projectPath;
+    }
+
+    public String start(ArrayList<Class> classes) {
+        File project = new File(userDir);
+
+        getPackages(project);
+        if (!packages.contains(POM) || !packages.contains(SRC)) {
+            return "It's not a maven project";
+        }
+
+        StringBuilder builder = new StringBuilder("It is a maven project. It contains:\n ");
+
+        for (String path : packages) {
+            builder.append(userDir).append("/").append(path).append(",\n");
+        }
+
+        return builder.toString();
+    }
+
+    private void getPackages(File project) {
+        if (!project.isDirectory()) return;
+
+        for (File file : project.listFiles()) {
+            if (file.isDirectory()) {
+
+                if (file.getName().equals(SRC)) {
+                    packages.add(SRC);
+
+                    for (File srcFile : file.listFiles()) {
+                        if (!srcFile.isDirectory())
+                            continue;
+                        switch (srcFile.getName()) {
+                            case MAIN: {
+                                addFilesFromDir(srcFile, MAIN);
+                                packages.add(formSrcName(MAIN));
+                                break;
+                            }
+                            case TEST: {
+                                addFilesFromDir(srcFile, TEST);
+                                packages.add(formSrcName(TEST));
+                                break;
+                            }
+                            case SITE: {
+                                packages.add(formSrcName(SITE));
+                                break;
+                            }
+                            case ASSEMBLY: {
+                                packages.add(formSrcName(ASSEMBLY));
+                                break;
+                            }
+                            case IT: {
+                                packages.add(formSrcName(IT));
+                                break;
+                            }
+                        }
+                    }
+                } else if (file.getName().equals(TARGET)) {
+                    packages.add(TARGET);
+                }
+            } else if (!file.isDirectory()) {
+
+                switch (file.getName()) {
+                    case POM: {
+                        packages.add(POM);
+                        break;
+                    }
+                    case NOTICE: {
+                        packages.add(NOTICE);
+                        break;
+                    }
+                    case LICENSE: {
+                        packages.add(LICENSE);
+                        break;
+                    }
+                    case README: {
+                        packages.add(README);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    private String formSrcName(String name) {
+        return SRC + "/" + name;
+    }
+
+    private void addFilesFromDir(File file, String name) {
+        List<String> childSDirs;
+
+        if (name.equals(TEST)) {
+            childSDirs = Arrays.asList(testDir);
+        } else childSDirs = Arrays.asList(mainDir);
+
+        for (File child : file.listFiles()) {
+            if (!child.isDirectory()) continue;
+
+            if (childSDirs.contains(child.getName())) {
+                packages.add(formSrcName(file.getName()) + "/" + child.getName());
+            }
+        }
+    }
+
 }

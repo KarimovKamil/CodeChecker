@@ -1,5 +1,6 @@
 package ru.itis.inform.checkers;
 
+import javax.persistence.Entity;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 

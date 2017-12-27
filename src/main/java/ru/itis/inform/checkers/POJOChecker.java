@@ -52,7 +52,9 @@ public class POJOChecker implements Checker {
         for (int i = 0; i < pojos.size() - 1; i++) {
             s.append(pojos.get(i).getName() + ", ");
         }
-        s.append(pojos.get(pojos.size() - 1));
+        if (pojos.size() > 0) {
+            s.append(pojos.get(pojos.size() - 1));
+        }
         return s.toString();
     }
 }

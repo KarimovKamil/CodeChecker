@@ -1,5 +1,6 @@
 package ru.itis.inform.checkers;
 
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 
 /**
@@ -7,6 +8,15 @@ import java.util.ArrayList;
  */
 public class ORMChecker implements Checker {
     public String start(ArrayList<Class> classes) {
-        return null;
+        int count = 0;
+        for (Class curClass : classes) {
+            Annotation[] annotations = curClass.getAnnotations();
+            for (Annotation annotation : annotations) {
+                if (annotation instanceof Entity) {
+                    count++;
+                }
+            }
+        }
+        return ("Количество ORM-классов в проекте: " + count);
     }
 }

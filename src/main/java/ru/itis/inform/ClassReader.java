@@ -6,6 +6,7 @@ package ru.itis.inform;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class ClassReader {
 
@@ -13,23 +14,34 @@ public class ClassReader {
         ArrayList<Class> classes = new ArrayList<>();
         File dir = new File(Thread.currentThread().getContextClassLoader()
                 .getResource(pkg.replace('.', '/')).getFile());
-        File[] files = dir.listFiles();
-
-        if (files != null) {
-            for (int i = 0; i < files.length; i++) {
-                if (files[i].isDirectory()) {
-                    ArrayList<Class> list = getClassesInPackage(pkg + "." + files[i].getName());
-                    classes.addAll(list);
-                } else {
-                    try {
-                        classes.add(Class.forName(pkg + "." + files[i].getName()
-                                .substring(0, files[i].getName().length() - 6)));
-                    } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
-                    }
+        for (File file : dir.listFiles()) {
+            HashSet<String> ser = find(pkg, file);
+            for (String s : ser) {
+                try {
+                    classes.add(Class.forName(s));
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
                 }
             }
         }
         return classes;
+    }
+
+    private HashSet<String> find(String pkg, File file) {
+        HashSet<String> setOfClasses = new HashSet<>();
+        String resource = pkg + "." + file.getName();
+        if (file.isDirectory()) {
+            for (File child : file.listFiles()) {
+                HashSet<String> set = find(pkg + "." + file.getName(), child);
+                for (String s : set) {
+                    setOfClasses.add(s);
+                }
+            }
+        } else {
+            if (resource.indexOf('$') == -1) {
+                setOfClasses.add(pkg + "." + file.getName().substring(0, file.getName().length() - 6));
+            }
+        }
+        return setOfClasses;
     }
 }

@@ -10,12 +10,10 @@ import java.util.HashSet;
 
 public class ClassReader {
 
-    public ArrayList<Class> getClassesInPackage(String pkg) {
+    public ArrayList<Class> getClassesInPackage(File dir) {
         ArrayList<Class> classes = new ArrayList<>();
-        File dir = new File(Thread.currentThread().getContextClassLoader()
-                .getResource(pkg.replace('.', '/')).getFile());
         for (File file : dir.listFiles()) {
-            HashSet<String> ser = find(pkg, file);
+            HashSet<String> ser = find(file);
             for (String s : ser) {
                 try {
                     classes.add(Class.forName(s));
@@ -27,20 +25,19 @@ public class ClassReader {
         return classes;
     }
 
-    private HashSet<String> find(String pkg, File file) {
+    private HashSet<String> find(File file) {
         HashSet<String> setOfClasses = new HashSet<>();
-        String resource = pkg + "." + file.getName();
         if (file.isDirectory()) {
             for (File child : file.listFiles()) {
-                HashSet<String> set = find(pkg + "." + file.getName(), child);
+                HashSet<String> set = find(child);
                 for (String s : set) {
                     setOfClasses.add(s);
                 }
             }
-        } else if (resource.endsWith(".class")){
-            if (resource.indexOf('$') == -1) {
-                setOfClasses.add(pkg + "." + file.getName().substring(0, file.getName().length() - 6));
-            }
+        } else if (file.getName().endsWith(".java")) {
+            String[] split = file.getAbsolutePath().split("java\\\\");
+            setOfClasses.add(split[1].replace('\\', '.')
+                    .substring(0, split[1].length() - 5));
         }
         return setOfClasses;
     }

@@ -4,12 +4,11 @@ import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import ru.itis.inform.checkers.Checker;
 
 /**
  * Created by Kamil Karimov on 26.12.2017.
  */
-public class SpringSecurityExistenceChecker implements Checker {
+public class SpringSecurityExistenceChecker implements ClassChecker {
     public String start(ArrayList<Class> classes) {
         for (Class aClass : classes) {
             Annotation[] annotations = aClass.getAnnotations();

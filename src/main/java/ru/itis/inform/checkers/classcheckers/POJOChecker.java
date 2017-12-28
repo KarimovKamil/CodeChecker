@@ -1,7 +1,5 @@
 package ru.itis.inform.checkers.classcheckers;
 
-import ru.itis.inform.checkers.Checker;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -11,7 +9,7 @@ import java.util.regex.Pattern;
 /**
  * Created by Kamil Karimov on 26.12.2017.
  */
-public class POJOChecker implements Checker {
+public class POJOChecker implements ClassChecker {
     public String start(ArrayList<Class> classes) {
         Pattern pattern = Pattern.compile("^(get|set).*");
         Matcher matcher;

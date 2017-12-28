@@ -1,10 +1,6 @@
 package ru.itis.inform;
 
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -15,8 +11,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
-import ru.itis.inform.checkers.Checker;
+import ru.itis.inform.checkers.classcheckers.ClassChecker;
 import ru.itis.inform.checkers.classcheckers.*;
+import ru.itis.inform.checkers.filecheckers.FileChecker;
 import ru.itis.inform.checkers.filecheckers.MavenStructureExistenceChecker;
 import ru.itis.inform.checkers.filecheckers.TemplateExistenceChecker;
 import ru.itis.inform.checkers.testcheckers.MockChecker;
@@ -43,12 +40,13 @@ public class App extends Application {
                 "6. Класс является POJO",
                 "7. В проекте использован JPARepository или CrudRepository ",
                 "8. Проект использует Spring Security ",
-                "9. Проект имеет структуру Maven-проекта ",
-                "10. В проекте использован/не использован - FreeMarker, JSP, JSTL ",
-                "11. Проверить наличие в тестах Mock-объектов библиотеки Mockito ",
-                "12. Подсчитать количество юнит-тестов в проекте "};
+                "9. Проверить наличие в тестах Mock-объектов библиотеки Mockito ",
+                "10. Подсчитать количество юнит-тестов в проекте ",
+                "11. Проект имеет структуру Maven-проекта ",
+                "12. В проекте использован/не использован - FreeMarker, JSP, JSTL "
+        };
 
-        Checker[] checkers = new Checker[]{
+        ClassChecker[] classCheckers = new ClassChecker[] {
                 new EntityFieldChecker(),
                 new HashExistenceChecker(),
                 new HashExistenceChecker(),
@@ -58,10 +56,13 @@ public class App extends Application {
                 new POJOChecker(),
                 new RepositoryChecker(),
                 new SpringSecurityExistenceChecker(),
-                new MavenStructureExistenceChecker(archive.toString()),
-                new TemplateExistenceChecker(archive.toString()),
                 new MockChecker(),
                 new UnitTestChecker()
+        };
+
+        FileChecker[] fileCheckers = new FileChecker[] {
+                new MavenStructureExistenceChecker(),
+                new TemplateExistenceChecker()
         };
 
         final TextField[] tasksF = new TextField[tasks.length];
@@ -77,9 +78,15 @@ public class App extends Application {
                 ClassReader classReader = new ClassReader();
                 ArrayList<Class> classes = classReader.getClassesInPackage(archive.toString());
                 ArrayList<String> output = new ArrayList<>();
-                for (int i = 0; i < tasksBool.length; i++) {
+                for (int i = 0; i < classCheckers.length; i++) {
                     if (tasksBool[i]) {
-                        output.add(checkers[i].start(classes));
+                        output.add(classCheckers[i].start(classes));
+                    }
+                }
+
+                for (int i = classCheckers.length; i < tasksBool.length; i++) {
+                    if (tasksBool[i]) {
+                        output.add(fileCheckers[i].start(archive.toString()));
                     }
                 }
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -87,7 +94,7 @@ public class App extends Application {
                 alert.setHeaderText(null);
                 StringBuilder result = new StringBuilder();
                 for (String s : output) {
-                    result.append(s + "\n");
+                    result.append(s).append("\n");
                 }
                 alert.setContentText(result.toString());
                 alert.showAndWait();

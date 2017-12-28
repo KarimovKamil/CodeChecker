@@ -3,7 +3,6 @@ package ru.itis.inform.checkers.classcheckers;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
-import ru.itis.inform.checkers.Checker;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -13,7 +12,7 @@ import java.util.regex.Pattern;
 /**
  * Created by Kamil Karimov on 26.12.2017.
  */
-public class PackageMappingChecker implements Checker {
+public class PackageMappingChecker implements ClassChecker {
     public String start(ArrayList<Class> classes) {
         String posResult = "В проекте все классы лежат в своих пакетах " +
                 "(Services, Controllers, DAO/Repository)";

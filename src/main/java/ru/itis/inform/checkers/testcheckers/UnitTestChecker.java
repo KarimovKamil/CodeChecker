@@ -1,7 +1,7 @@
 package ru.itis.inform.checkers.testcheckers;
 
 import org.junit.Test;
-import ru.itis.inform.checkers.Checker;
+import ru.itis.inform.checkers.classcheckers.ClassChecker;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 /**
  * Created by Kamil Karimov on 26.12.2017.
  */
-public class UnitTestChecker implements Checker {
+public class UnitTestChecker implements ClassChecker {
     public String start(ArrayList<Class> classes) {
         int testsCount = 0;
         for (Class curClass : classes) {

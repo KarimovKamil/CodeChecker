@@ -5,12 +5,12 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import org.mockito.Mock;
-import ru.itis.inform.checkers.Checker;
+import ru.itis.inform.checkers.classcheckers.ClassChecker;
 
 /**
  * Created by Kamil Karimov on 26.12.2017.
  */
-public class MockChecker implements Checker {
+public class MockChecker implements ClassChecker {
     public String start(ArrayList<Class> classes) {
         for (Class aClass : classes) {
             Field[] fields = aClass.getDeclaredFields();

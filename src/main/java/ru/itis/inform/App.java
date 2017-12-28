@@ -14,8 +14,15 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+import ru.itis.inform.checkers.Checker;
+import ru.itis.inform.checkers.classcheckers.*;
+import ru.itis.inform.checkers.filecheckers.MavenStructureExistenceChecker;
+import ru.itis.inform.checkers.filecheckers.TemplateExistenceChecker;
+import ru.itis.inform.checkers.testcheckers.MockChecker;
+import ru.itis.inform.checkers.testcheckers.UnitTestChecker;
 
 import java.io.File;
+import java.util.ArrayList;
 
 /**
  * Created by Kamil Karimov on 28.12.2017.
@@ -27,18 +34,34 @@ public class App extends Application {
 
     @Override
     public void start(final Stage stage) {
-        tasks = new String[]{"1. Определенное количество ORM-классов @Entity ",
-                "2. Класс является POJO",
-                "3. В проекте использован JPARepository или CrudRepository ",
-                "4. Подсчитать количество юнит-тестов в проекте ",
-                "5. Проверить наличие в тестах Mock-объектов библиотеки Mockito ",
-                "6. В проекте использован/не использован - FreeMarker, JSP, JSTL ",
-                "7. В проекте реализовано хэширование паролей ",
+        tasks = new String[]{"1. Каждая Entity должна содержать не менее трех полей ",
+                "2. В проекте реализовано хэширование паролей ",
+                "3. В приложении есть N разных ссылок на страницы приложения (по маппингам) ",
+                "4. Определенное количество ORM-классов @Entity ",
+                "5. В проекте все классы лежат в своих пакетах (Services, Controllers, DAO/Repository)",
+                "6. Класс является POJO",
+                "7. В проекте использован JPARepository или CrudRepository ",
                 "8. Проект использует Spring Security ",
-                "9. Каждая Entity должна содержать не менее трех полей ",
-                "10. В приложении есть N разных ссылок на страницы приложения (по маппингам) ",
-                "11. Проект имеет структуру Maven-проекта ",
-                "12. В проекте все классы лежат в своих пакетах (Services, Controllers, DAO/Repository)"};
+                "9. Проект имеет структуру Maven-проекта ",
+                "10. В проекте использован/не использован - FreeMarker, JSP, JSTL ",
+                "11. Проверить наличие в тестах Mock-объектов библиотеки Mockito ",
+                "12. Подсчитать количество юнит-тестов в проекте "};
+
+        Checker[] checkers = new Checker[]{
+                new EntityFieldChecker(),
+                new HashExistenceChecker(),
+                new HashExistenceChecker(),
+                new MappingChecker(),
+                new ORMChecker(),
+                new PackageMappingChecker(),
+                new POJOChecker(),
+                new RepositoryChecker(),
+                new SpringSecurityExistenceChecker(),
+                new MavenStructureExistenceChecker(archive.toString()),
+                new TemplateExistenceChecker(archive.toString()),
+                new MockChecker(),
+                new UnitTestChecker()
+        };
 
         final TextField[] tasksF = new TextField[tasks.length];
         final CheckBox[] cbs = new CheckBox[tasks.length];
@@ -48,14 +71,19 @@ public class App extends Application {
         startBtn.setText("Start!");
         startBtn.setMinSize(520, 25);
         startBtn.setDisable(true);
-        startBtn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                try {
-                    System.out.println("Hello");
-                } catch (Exception ex) {
-                    System.out.println("Exception!");
+        startBtn.setOnAction(event -> {
+            try {
+                ClassReader classReader = new ClassReader();
+                ArrayList<Class> classes = classReader.getClassesInPackage(archive.toString());
+                ArrayList<String> output = new ArrayList<>();
+                for (int i = 0; i < tasksBool.length; i++) {
+                    if (tasksBool[i]) {
+                        output.add(checkers[i].start(classes));
+                    }
                 }
+
+            } catch (Exception ex) {
+                System.out.println("Exception!");
             }
         });
 
@@ -65,16 +93,13 @@ public class App extends Application {
         final DirectoryChooser fileChooser = new DirectoryChooser();
         Button btn = new Button();
         btn.setText("Browse files");
-        btn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                File file = fileChooser.showDialog(stage);
-                if (file != null) {
-                    startBtn.setDisable(false);
-                    archive = file;
-                    tf.setText(archive.toString());
-                    System.out.println(archive.toString());
-                }
+        btn.setOnAction(event -> {
+            File file = fileChooser.showDialog(stage);
+            if (file != null) {
+                startBtn.setDisable(false);
+                archive = file;
+                tf.setText(archive.toString());
+                System.out.println(archive.toString());
             }
         });
 
@@ -86,12 +111,9 @@ public class App extends Application {
             cbs[i].setId(Integer.toString(i));
             cbs[i].setSelected(tasksBool[i]);
             final CheckBox cb = cbs[i];
-            cb.selectedProperty().addListener(new ChangeListener<Boolean>() {
-                public void changed(ObservableValue<? extends Boolean> ov,
-                                    Boolean old_val, Boolean new_val) {
-                    int id = Integer.valueOf(cb.getId());
-                    tasksBool[id] = new_val;
-                }
+            cb.selectedProperty().addListener((ov, old_val, new_val) -> {
+                int id = Integer.valueOf(cb.getId());
+                tasksBool[id] = new_val;
             });
         }
 
@@ -100,7 +122,6 @@ public class App extends Application {
         HBox hBox1 = new HBox();
         hBox1.getChildren().addAll(tf, btn);
 
-        vbox.getChildren().add(startBtn);
         vbox.getChildren().add(hBox1);
 
         HBox hBox[] = new HBox[tasks.length];
@@ -113,6 +134,8 @@ public class App extends Application {
             hBox[i].getChildren().addAll(tasksF[i], cbs[i]);
             vbox.getChildren().add(hBox[i]);
         }
+
+        vbox.getChildren().add(startBtn);
 
         BorderPane root = new BorderPane();
         root.setCenter(vbox);

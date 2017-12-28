@@ -11,9 +11,8 @@ import java.util.ArrayList;
  * Created by Kamil Karimov on 26.12.2017.
  */
 public class HashExistenceChecker implements ClassChecker {
-    boolean hash = false;
-
     public String start(ArrayList<Class> classes) {
+        boolean hash = false;
         for (Class curClass : classes) {
             if (curClass.getName().contains("hash") || curClass.getName().contains("Hash")) {
                 hash = true;

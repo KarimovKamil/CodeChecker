@@ -11,13 +11,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
-import ru.itis.inform.checkers.classcheckers.ClassChecker;
 import ru.itis.inform.checkers.classcheckers.*;
-import ru.itis.inform.checkers.filecheckers.FileChecker;
-import ru.itis.inform.checkers.filecheckers.MavenStructureExistenceChecker;
-import ru.itis.inform.checkers.filecheckers.TemplateExistenceChecker;
-import ru.itis.inform.checkers.testcheckers.MockChecker;
-import ru.itis.inform.checkers.testcheckers.UnitTestChecker;
+import ru.itis.inform.checkers.filecheckers.*;
+import ru.itis.inform.checkers.testcheckers.*;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -32,23 +28,22 @@ public class App extends Application {
 
     @Override
     public void start(final Stage stage) {
-        tasks = new String[]{"1. Каждая Entity должна содержать не менее трех полей ",
-                "2. В проекте реализовано хэширование паролей ",
-                "3. В приложении есть N разных ссылок на страницы приложения (по маппингам) ",
-                "4. Определенное количество ORM-классов @Entity ",
-                "5. В проекте все классы лежат в своих пакетах (Services, Controllers, DAO/Repository)",
-                "6. Класс является POJO",
-                "7. В проекте использован JPARepository или CrudRepository ",
-                "8. Проект использует Spring Security ",
-                "9. Проверить наличие в тестах Mock-объектов библиотеки Mockito ",
-                "10. Подсчитать количество юнит-тестов в проекте ",
-                "11. Проект имеет структуру Maven-проекта ",
-                "12. В проекте использован/не использован - FreeMarker, JSP, JSTL "
+        tasks = new String[]{". Каждая Entity должна содержать не менее трех полей ",
+                ". В проекте реализовано хэширование паролей ",
+                ". В приложении есть N разных ссылок на страницы приложения (по маппингам) ",
+                ". Определенное количество ORM-классов @Entity ",
+                ". В проекте все классы лежат в своих пакетах (Services, Controllers, DAO/Repository)",
+                ". Класс является POJO",
+                ". В проекте использован JPARepository или CrudRepository ",
+                ". Проект использует Spring Security ",
+                ". Проверить наличие в тестах Mock-объектов библиотеки Mockito ",
+                ". Подсчитать количество юнит-тестов в проекте ",
+                ". Проект имеет структуру Maven-проекта ",
+                ". В проекте использован/не использован - FreeMarker, JSP, JSTL "
         };
 
         ClassChecker[] classCheckers = new ClassChecker[] {
                 new EntityFieldChecker(),
-                new HashExistenceChecker(),
                 new HashExistenceChecker(),
                 new MappingChecker(),
                 new ORMChecker(),
@@ -76,7 +71,7 @@ public class App extends Application {
         startBtn.setOnAction(event -> {
             try {
                 ClassReader classReader = new ClassReader();
-                ArrayList<Class> classes = classReader.getClassesInPackage(archive.toString());
+                ArrayList<Class> classes = classReader.getClassesInPackage(archive);
                 ArrayList<String> output = new ArrayList<>();
                 for (int i = 0; i < classCheckers.length; i++) {
                     if (tasksBool[i]) {
@@ -86,7 +81,7 @@ public class App extends Application {
 
                 for (int i = classCheckers.length; i < tasksBool.length; i++) {
                     if (tasksBool[i]) {
-                        output.add(fileCheckers[i].start(archive.toString()));
+                        output.add(fileCheckers[i - classCheckers.length].start(archive.toString()));
                     }
                 }
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -100,7 +95,7 @@ public class App extends Application {
                 alert.showAndWait();
 
             } catch (Exception ex) {
-                System.out.println("Exception!");
+                ex.printStackTrace();
             }
         });
 
@@ -145,7 +140,7 @@ public class App extends Application {
         for (int i = 0; i < tasks.length; i++) {
             hBox[i] = new HBox();
             tasksF[i] = new TextField();
-            tasksF[i].setText(tasks[i]);
+            tasksF[i].setText((i + 1) + tasks[i]);
             tasksF[i].setDisable(true);
             tasksF[i].setMinSize(500, 20);
             hBox[i].getChildren().addAll(tasksF[i], cbs[i]);

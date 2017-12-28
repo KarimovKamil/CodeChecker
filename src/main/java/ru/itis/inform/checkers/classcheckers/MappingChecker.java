@@ -9,10 +9,9 @@ import java.util.Set;
 import java.util.TreeSet;
 
 public class MappingChecker implements ClassChecker {
-
-    private Set<String> mappings = new TreeSet<>();
-
     public String start(ArrayList<Class> classes) {
+        Set<String> mappings = new TreeSet<>();
+
         String classMapping, methodMapping;
         for (Class aClass : classes) {
             classMapping = getClassMapping(aClass);

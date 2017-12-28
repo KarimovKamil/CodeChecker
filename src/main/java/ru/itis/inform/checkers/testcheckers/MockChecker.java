@@ -1,9 +1,10 @@
-package ru.itis.inform.checkers;
+package ru.itis.inform.checkers.testcheckers;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import org.mockito.Mock;
+import ru.itis.inform.checkers.Checker;
 
 /**
  * Created by Kamil Karimov on 26.12.2017.

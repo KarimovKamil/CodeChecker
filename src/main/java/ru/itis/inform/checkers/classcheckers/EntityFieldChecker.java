@@ -1,6 +1,7 @@
-package ru.itis.inform.checkers;
+package ru.itis.inform.checkers.classcheckers;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import ru.itis.inform.checkers.Checker;
 
 import javax.persistence.Entity;
 import java.lang.annotation.Annotation;

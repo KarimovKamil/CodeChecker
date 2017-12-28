@@ -1,6 +1,7 @@
-package ru.itis.inform.checkers;
+package ru.itis.inform.checkers.testcheckers;
 
 import org.junit.Test;
+import ru.itis.inform.checkers.Checker;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;

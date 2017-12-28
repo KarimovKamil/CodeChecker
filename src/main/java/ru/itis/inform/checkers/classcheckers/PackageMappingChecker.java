@@ -1,4 +1,9 @@
-package ru.itis.inform.checkers;
+package ru.itis.inform.checkers.classcheckers;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
+import ru.itis.inform.checkers.Checker;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;

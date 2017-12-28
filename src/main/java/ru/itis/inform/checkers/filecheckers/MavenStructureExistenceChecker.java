@@ -1,5 +1,7 @@
-package ru.itis.inform.checkers;
+package ru.itis.inform.checkers.filecheckers;
 
+
+import ru.itis.inform.checkers.Checker;
 
 import java.io.File;
 import java.util.*;

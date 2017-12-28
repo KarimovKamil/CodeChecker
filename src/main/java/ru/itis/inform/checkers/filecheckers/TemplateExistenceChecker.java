@@ -1,6 +1,7 @@
-package ru.itis.inform.checkers;
+package ru.itis.inform.checkers.filecheckers;
 
 import org.apache.commons.io.FilenameUtils;
+import ru.itis.inform.checkers.Checker;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;

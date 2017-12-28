@@ -1,4 +1,6 @@
-package ru.itis.inform.checkers;
+package ru.itis.inform.checkers.classcheckers;
+
+import ru.itis.inform.checkers.Checker;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;

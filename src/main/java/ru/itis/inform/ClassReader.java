@@ -37,7 +37,7 @@ public class ClassReader {
                     setOfClasses.add(s);
                 }
             }
-        } else {
+        } else if (resource.endsWith(".class")){
             if (resource.indexOf('$') == -1) {
                 setOfClasses.add(pkg + "." + file.getName().substring(0, file.getName().length() - 6));
             }

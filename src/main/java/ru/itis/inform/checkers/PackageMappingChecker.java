@@ -89,9 +89,6 @@ public class PackageMappingChecker implements Checker {
                 }
                 return NEG_RESULT;
             }
-            else {
-                return NEG_RESULT;
-            }
         }
         return POS_RESULT;
     }

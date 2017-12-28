@@ -55,7 +55,10 @@ public class App extends Application {
                 new PackageMappingChecker(),
                 new POJOChecker(),
                 new RepositoryChecker(),
-                new SpringSecurityExistenceChecker(),
+                new SpringSecurityExistenceChecker()
+        };
+
+        ClassChecker[] testCheckers = new ClassChecker[]{
                 new MockChecker(),
                 new UnitTestChecker()
         };
@@ -76,7 +79,10 @@ public class App extends Application {
         startBtn.setOnAction(event -> {
             try {
                 ClassReader classReader = new ClassReader();
-                ArrayList<Class> classes = classReader.getClassesInPackage(archive);
+                File cl = new File(archive.toString() + "\\target\\classes");
+                File te = new File(archive.toString() + "\\target\\test-classes");
+                ArrayList<Class> classes = classReader.getClassesInPackage(cl);
+                ArrayList<Class> tests = classReader.getClassesInPackage(te);
                 ArrayList<String> output = new ArrayList<>();
                 for (int i = 0; i < classCheckers.length; i++) {
                     if (tasksBool[i]) {
@@ -84,11 +90,18 @@ public class App extends Application {
                     }
                 }
 
-                for (int i = classCheckers.length; i < tasksBool.length; i++) {
+                for (int i = classCheckers.length; i < tasksBool.length - fileCheckers.length; i++) {
                     if (tasksBool[i]) {
-                        output.add(fileCheckers[i - classCheckers.length].start(archive.toString()));
+                        output.add(testCheckers[i - classCheckers.length].start(tests));
                     }
                 }
+
+                for (int i = classCheckers.length + testCheckers.length; i < tasksBool.length; i++) {
+                    if (tasksBool[i]) {
+                        output.add(fileCheckers[i - classCheckers.length - testCheckers.length].start(archive.toString()));
+                    }
+                }
+
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Summary");
                 alert.setHeaderText(null);

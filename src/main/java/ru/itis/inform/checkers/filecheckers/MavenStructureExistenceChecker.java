@@ -38,10 +38,10 @@ public class MavenStructureExistenceChecker implements FileChecker {
 
         getPackages(project);
         if (!packages.contains(POM) || !packages.contains(SRC)) {
-            return "It's not a maven project";
+            return "Проект не имеет структуру Maven-проекта ";
         }
 
-        StringBuilder builder = new StringBuilder("It is a maven project. It contains:\n ");
+        StringBuilder builder = new StringBuilder("Проект имеет структуру Maven-проекта . Проект содержит:\n ");
 
         for (String path : packages) {
             builder.append(userDir).append("/").append(path).append(",\n");

@@ -4,6 +4,8 @@ package ru.itis.inform;
  * Created by Kamil Karimov on 26.12.2017.
  */
 
+import org.springframework.jdbc.core.RowMapper;
+
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -21,7 +23,7 @@ public class ClassReader {
             e.printStackTrace();
         }
         System.out.println(dir.toString().replace('\\', '/') + "/");
-        URL[] classUrls = { url };
+        URL[] classUrls = {url};
         URLClassLoader urlClassLoader = new URLClassLoader(classUrls);
 
         ArrayList<Class> classes = new ArrayList<>();
@@ -32,6 +34,7 @@ public class ClassReader {
                     classes.add(urlClassLoader.loadClass(s));
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
+                } catch (NoClassDefFoundError e) {
                 }
             }
         }

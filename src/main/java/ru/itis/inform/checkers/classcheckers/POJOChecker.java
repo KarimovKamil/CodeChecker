@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
  */
 public class POJOChecker implements ClassChecker {
     public String start(ArrayList<Class> classes) {
-        Pattern pattern = Pattern.compile("^(get|set).*");
+        Pattern pattern = Pattern.compile(".*(get|set).*");
         Matcher matcher;
         ArrayList<Class> pojos = new ArrayList<>();
         next:

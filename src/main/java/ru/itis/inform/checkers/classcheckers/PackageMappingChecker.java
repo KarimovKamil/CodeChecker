@@ -49,7 +49,15 @@ public class PackageMappingChecker implements ClassChecker {
                         }
                     }
                 }
-                return negResult;
+                if (controllerClassMatcher.matches()) {
+                    return negResult;
+                }
+                if (daoClassMatcher.matches()) {
+                    return negResult;
+                }
+                if (repositoryClassMatcher.matches()) {
+                    return negResult;
+                }
             } else if (controllerPkgMatcher.matches()) {
                 if (controllerClassMatcher.matches()) {
                     continue;
@@ -60,7 +68,16 @@ public class PackageMappingChecker implements ClassChecker {
                         }
                     }
                 }
-                return negResult;
+                if (serviceClassMatcher.matches()) {
+                    return negResult;
+                }
+                if (daoClassMatcher.matches()) {
+                    return negResult;
+                }
+                if (repositoryClassMatcher.matches()) {
+                    return negResult;
+                }
+
             } else if (daoPkgMatcher.matches()) {
                 if (daoClassMatcher.matches()) {
                     continue;
@@ -71,7 +88,15 @@ public class PackageMappingChecker implements ClassChecker {
                         }
                     }
                 }
-                return negResult;
+                if (serviceClassMatcher.matches()) {
+                    return negResult;
+                }
+                if (controllerClassMatcher.matches()) {
+                    return negResult;
+                }
+                if (repositoryClassMatcher.matches()) {
+                    return negResult;
+                }
             } else if (repositoryPkgMatcher.matches()) {
                 if (repositoryClassMatcher.matches()) {
                     continue;
@@ -82,7 +107,15 @@ public class PackageMappingChecker implements ClassChecker {
                         }
                     }
                 }
-                return negResult;
+                if (serviceClassMatcher.matches()) {
+                    return negResult;
+                }
+                if (controllerClassMatcher.matches()) {
+                    return negResult;
+                }
+                if (daoClassMatcher.matches()) {
+                    return negResult;
+                }
             }
         }
         return posResult;

@@ -129,7 +129,6 @@ public class App extends Application {
                 startBtn.setDisable(false);
                 archive = file;
                 tf.setText(archive.toString());
-                System.out.println(archive.toString());
             }
         });
 

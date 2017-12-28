@@ -6,6 +6,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
@@ -81,6 +82,15 @@ public class App extends Application {
                         output.add(checkers[i].start(classes));
                     }
                 }
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Summary");
+                alert.setHeaderText(null);
+                StringBuilder result = new StringBuilder();
+                for (String s : output) {
+                    result.append(s + "\n");
+                }
+                alert.setContentText(result.toString());
+                alert.showAndWait();
 
             } catch (Exception ex) {
                 System.out.println("Exception!");

@@ -11,10 +11,14 @@ import java.util.ArrayList;
  * Created by Yoko on 27.12.2017.
  */
 public class TemplateExistenceChecker implements Checker {
-    final String FILENAME = "src/";
+    String FILENAME = "";
     boolean ftl = false;
     boolean jsp = false;
     boolean jstl = false;
+
+    public TemplateExistenceChecker(String FILENAME) {
+        this.FILENAME = FILENAME;
+    }
 
     public String start(ArrayList<Class> classes) {
         final File folder = new File(FILENAME);

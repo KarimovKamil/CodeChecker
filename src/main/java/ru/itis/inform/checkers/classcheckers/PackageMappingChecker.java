@@ -14,14 +14,12 @@ import java.util.regex.Pattern;
  * Created by Kamil Karimov on 26.12.2017.
  */
 public class PackageMappingChecker implements Checker {
-
-    private static final String POS_RESULT = "В проекте все классы лежат в своих пакетах " +
-            "(Services, Controllers, DAO/Repository)";
-
-    private static final String NEG_RESULT = "В проекте не все классы лежат в своих пакетах " +
-            "(Services, Controllers, DAO/Repository)";
-
     public String start(ArrayList<Class> classes) {
+        String posResult = "В проекте все классы лежат в своих пакетах " +
+                "(Services, Controllers, DAO/Repository)";
+        String negResult = "В проекте не все классы лежат в своих пакетах " +
+                "(Services, Controllers, DAO/Repository)";
+
         Pattern servicePattern = Pattern.compile(".*(S|s)ervice.*");
         Pattern controllerPattern = Pattern.compile(".*(C|c)ontroller.*");
         Pattern daoPattern = Pattern.compile(".*(D|d)ao.*");
@@ -45,56 +43,49 @@ public class PackageMappingChecker implements Checker {
             if (servicePkgMatcher.matches()) {
                 if (serviceClassMatcher.matches()) {
                     continue;
-                }
-                else {
+                } else {
                     for (Annotation annotation : annotations) {
                         if (annotation instanceof Service) {
                             continue next;
                         }
                     }
                 }
-                return NEG_RESULT;
-            }
-            else if (controllerPkgMatcher.matches()) {
+                return negResult;
+            } else if (controllerPkgMatcher.matches()) {
                 if (controllerClassMatcher.matches()) {
                     continue;
-                }
-                else {
+                } else {
                     for (Annotation annotation : annotations) {
                         if (annotation instanceof Controller) {
                             continue next;
                         }
                     }
                 }
-                return NEG_RESULT;
-            }
-            else if (daoPkgMatcher.matches()) {
+                return negResult;
+            } else if (daoPkgMatcher.matches()) {
                 if (daoClassMatcher.matches()) {
                     continue;
-                }
-                else {
+                } else {
                     for (Annotation annotation : annotations) {
                         if (annotation instanceof Repository) {
                             continue next;
                         }
                     }
                 }
-                return NEG_RESULT;
-            }
-            else if (repositoryPkgMatcher.matches()) {
+                return negResult;
+            } else if (repositoryPkgMatcher.matches()) {
                 if (repositoryClassMatcher.matches()) {
                     continue;
-                }
-                else {
+                } else {
                     for (Annotation annotation : annotations) {
                         if (annotation instanceof Repository) {
                             continue next;
                         }
                     }
                 }
-                return NEG_RESULT;
+                return negResult;
             }
         }
-        return POS_RESULT;
+        return posResult;
     }
 }

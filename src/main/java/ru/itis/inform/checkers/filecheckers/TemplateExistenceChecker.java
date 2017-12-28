@@ -22,7 +22,7 @@ public class TemplateExistenceChecker implements Checker {
         return getResult();
     }
 
-    public void listFilesForFolder(final File folder) {
+    private void listFilesForFolder(final File folder) {
         for (final File fileEntry : folder.listFiles()) {
             if (fileEntry.isDirectory()) {
                 listFilesForFolder(fileEntry);
@@ -40,7 +40,7 @@ public class TemplateExistenceChecker implements Checker {
         }
     }
 
-    public void checkJstl(String filename) {
+    private void checkJstl(String filename) {
         try (BufferedReader reader = new BufferedReader(
                 new InputStreamReader(
                         new FileInputStream(filename), StandardCharsets.UTF_8))) {
@@ -56,7 +56,7 @@ public class TemplateExistenceChecker implements Checker {
         }
     }
 
-    public String getResult() {
+    private String getResult() {
         StringBuilder result = new StringBuilder("В проекте используется ");
         if (ftl) result.append("FreeMarker ");
         if (jsp) {

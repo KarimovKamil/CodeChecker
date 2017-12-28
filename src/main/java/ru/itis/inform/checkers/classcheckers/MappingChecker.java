@@ -13,7 +13,6 @@ public class MappingChecker implements Checker {
 
     private Set<String> mappings = new TreeSet<>();
 
-    @Override
     public String start(ArrayList<Class> classes) {
         String classMapping, methodMapping;
         for (Class aClass : classes) {

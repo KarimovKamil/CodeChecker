@@ -2,6 +2,7 @@ package ru.itis.inform.checkers.classcheckers;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
+
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import ru.itis.inform.checkers.Checker;
 

@@ -50,12 +50,15 @@ public class POJOChecker implements Checker {
             pojos.add(aClass);
         }
 
-        StringBuilder s = new StringBuilder("POJO: ");
-        for (int i = 0; i < pojos.size() - 1; i++) {
-            s.append(pojos.get(i).getName()).append(", ");
-        }
+        StringBuilder s;
         if (pojos.size() > 0) {
+            s = new StringBuilder("POJO классы: ");
+            for (int i = 0; i < pojos.size() - 1; i++) {
+                s.append(pojos.get(i).getName()).append(", ");
+            }
             s.append(pojos.get(pojos.size() - 1));
+        } else {
+            s = new StringBuilder("В проекте POJO классы отстуствуют");
         }
         return s.toString();
     }

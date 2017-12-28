@@ -1,6 +1,8 @@
 package ru.itis.inform;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -12,8 +14,11 @@ import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import ru.itis.inform.checkers.classcheckers.*;
-import ru.itis.inform.checkers.filecheckers.*;
-import ru.itis.inform.checkers.testcheckers.*;
+import ru.itis.inform.checkers.filecheckers.FileChecker;
+import ru.itis.inform.checkers.filecheckers.MavenStructureExistenceChecker;
+import ru.itis.inform.checkers.filecheckers.TemplateExistenceChecker;
+import ru.itis.inform.checkers.testcheckers.MockChecker;
+import ru.itis.inform.checkers.testcheckers.UnitTestChecker;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -42,7 +47,7 @@ public class App extends Application {
                 ". В проекте использован/не использован - FreeMarker, JSP, JSTL "
         };
 
-        ClassChecker[] classCheckers = new ClassChecker[] {
+        ClassChecker[] classCheckers = new ClassChecker[]{
                 new EntityFieldChecker(),
                 new HashExistenceChecker(),
                 new MappingChecker(),
@@ -55,7 +60,7 @@ public class App extends Application {
                 new UnitTestChecker()
         };
 
-        FileChecker[] fileCheckers = new FileChecker[] {
+        FileChecker[] fileCheckers = new FileChecker[]{
                 new MavenStructureExistenceChecker(),
                 new TemplateExistenceChecker()
         };
@@ -99,7 +104,7 @@ public class App extends Application {
             }
         });
 
-        tf.setMinSize(437, 20);
+        tf.setMinSize(392, 20);
         tf.setDisable(true);
 
         final DirectoryChooser fileChooser = new DirectoryChooser();
@@ -131,8 +136,22 @@ public class App extends Application {
 
         VBox vbox = new VBox();
 
+        CheckBox selectAll = new CheckBox();
+        selectAll.setSelected(true);
+        selectAll.setText("All");
+        selectAll.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            public void changed(ObservableValue<? extends Boolean> ov,
+                                Boolean old_val, Boolean new_val) {
+                for (int i = 0; i < tasks.length; i++) {
+                    tasksBool[i] = new_val;
+                    cbs[i].setSelected(new_val);
+                }
+            }
+        });
+
         HBox hBox1 = new HBox();
-        hBox1.getChildren().addAll(tf, btn);
+        hBox1.setSpacing(5);
+        hBox1.getChildren().addAll(tf, selectAll, btn);
 
         vbox.getChildren().add(hBox1);
 

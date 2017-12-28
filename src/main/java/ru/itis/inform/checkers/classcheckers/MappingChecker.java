@@ -1,7 +1,6 @@
 package ru.itis.inform.checkers.classcheckers;
 
 import org.springframework.web.bind.annotation.RequestMapping;
-import ru.itis.inform.checkers.Checker;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -9,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class MappingChecker implements Checker {
+public class MappingChecker implements ClassChecker {
 
     private Set<String> mappings = new TreeSet<>();
 

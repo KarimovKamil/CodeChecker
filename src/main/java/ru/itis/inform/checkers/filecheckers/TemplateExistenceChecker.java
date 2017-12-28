@@ -1,27 +1,20 @@
 package ru.itis.inform.checkers.filecheckers;
 
 import org.apache.commons.io.FilenameUtils;
-import ru.itis.inform.checkers.Checker;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 
 /**
  * Created by Yoko on 27.12.2017.
  */
-public class TemplateExistenceChecker implements Checker {
-    String FILENAME = "";
-    boolean ftl = false;
-    boolean jsp = false;
-    boolean jstl = false;
+public class TemplateExistenceChecker implements FileChecker {
+    private boolean ftl = false;
+    private boolean jsp = false;
+    private boolean jstl = false;
 
-    public TemplateExistenceChecker(String FILENAME) {
-        this.FILENAME = FILENAME;
-    }
-
-    public String start(ArrayList<Class> classes) {
-        final File folder = new File(FILENAME);
+    public String start(String projectPath) {
+        final File folder = new File(projectPath);
         listFilesForFolder(folder);
         return getResult();
     }

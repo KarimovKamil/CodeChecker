@@ -1,15 +1,16 @@
 package ru.itis.inform.checkers.filecheckers;
 
 
-import ru.itis.inform.checkers.Checker;
-
 import java.io.File;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Created by Kamil Karimov on 26.12.2017.
  */
-public class MavenStructureExistenceChecker implements Checker {
+public class MavenStructureExistenceChecker implements FileChecker {
 
     private static final String POM = "pom.xml";
     private static final String SRC = "src";
@@ -31,15 +32,8 @@ public class MavenStructureExistenceChecker implements Checker {
     private String userDir;
     private Set<String> packages = new TreeSet<>();
 
-    public MavenStructureExistenceChecker() {
-        this.userDir = System.getProperty("user.dir");
-    }
-
-    public MavenStructureExistenceChecker(String projectPath) {
+    public String start(String projectPath) {
         this.userDir = projectPath;
-    }
-
-    public String start(ArrayList<Class> classes) {
         File project = new File(userDir);
 
         getPackages(project);

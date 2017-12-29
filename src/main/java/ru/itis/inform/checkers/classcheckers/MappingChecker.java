@@ -25,15 +25,8 @@ public class MappingChecker implements ClassChecker {
             }
         }
 
-        StringBuilder builder = new StringBuilder("Количество различных ссылок на странице приложения: ")
-                .append(mappings.size())
-                .append("\n");
-
-        for (String mapping : mappings) {
-            builder.append(mapping).append(",\n");
-        }
-
-        return builder.toString();
+        return "Количество различных ссылок на странице приложения: " +
+                mappings.size();
     }
 
     private String getMethodMapping(Method method) {

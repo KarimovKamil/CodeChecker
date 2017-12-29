@@ -41,13 +41,7 @@ public class MavenStructureExistenceChecker implements FileChecker {
             return "Проект не имеет структуру Maven-проекта ";
         }
 
-        StringBuilder builder = new StringBuilder("Проект имеет структуру Maven-проекта . Проект содержит:\n ");
-
-        for (String path : packages) {
-            builder.append(userDir).append("/").append(path).append(",\n");
-        }
-
-        return builder.toString();
+        return "Проект имеет структуру Maven-проекта";
     }
 
     private void getPackages(File project) {

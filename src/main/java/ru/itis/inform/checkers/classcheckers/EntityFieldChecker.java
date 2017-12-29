@@ -15,25 +15,20 @@ public class EntityFieldChecker implements ClassChecker {
             if (EntityCheckerHelper.getInstance().isEntity(aClass)) {
                 entityClasses.add(aClass);
                 if (aClass.getDeclaredFields().length < 3) {
-                    return new StringBuilder("Сущность: ")
-                            .append(aClass.getName())
-                            .append(" содержит только ")
-                            .append(aClass.getDeclaredFields().length)
-                            .append(" поля")
-                            .toString();
+                    return "Сущность: " +
+                            aClass.getName() +
+                            " содержит только " +
+                            aClass.getDeclaredFields().length +
+                            " поля";
                 }
             }
         }
-        StringBuilder builder = new StringBuilder("Сущности: ");
+        StringBuilder builder = new StringBuilder();
 
-        for (Class entityClass : entityClasses) {
-            builder.append(entityClass.getName()).append(",\n");
-        }
         if (entityClasses.size() > 0) {
-            builder.append("Количество сущностей: ")
-                    .append(entityClasses.size())
-                    .append("\n")
-                    .append("Они содержат более 3-х полей");
+            builder.append("Все сущности  содержат 3 или более полей. " +
+                    "Количество сущностей, содержащих более 2-х полей: ")
+                    .append(entityClasses.size());
         }
 
         return builder.toString();

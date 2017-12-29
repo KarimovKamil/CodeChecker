@@ -1,4 +1,4 @@
-package ru.itis.inform;
+package ru.itis.inform.utils;
 
 /**
  * Created by Kamil Karimov on 26.12.2017.

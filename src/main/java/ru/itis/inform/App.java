@@ -13,12 +13,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
-import ru.itis.inform.checkers.classcheckers.*;
+import ru.itis.inform.checkers.classcheckers.ClassChecker;
 import ru.itis.inform.checkers.filecheckers.FileChecker;
-import ru.itis.inform.checkers.filecheckers.MavenStructureExistenceChecker;
-import ru.itis.inform.checkers.filecheckers.TemplateExistenceChecker;
-import ru.itis.inform.checkers.testcheckers.MockChecker;
-import ru.itis.inform.checkers.testcheckers.UnitTestChecker;
+import ru.itis.inform.utils.CheckersStorage;
+import ru.itis.inform.utils.ClassReader;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -33,40 +31,10 @@ public class App extends Application {
 
     @Override
     public void start(final Stage stage) {
-        tasks = new String[]{". Каждая Entity должна содержать не менее трех полей ",
-                ". В проекте реализовано хэширование паролей ",
-                ". В приложении есть N разных ссылок на страницы приложения (по маппингам) ",
-                ". Определенное количество ORM-классов @Entity ",
-                ". В проекте все классы лежат в своих пакетах (Services, Controllers, DAO/Repository)",
-                ". Класс является POJO",
-                ". В проекте использован JPARepository или CrudRepository ",
-                ". Проект использует Spring Security ",
-                ". Проверить наличие в тестах Mock-объектов библиотеки Mockito ",
-                ". Подсчитать количество юнит-тестов в проекте ",
-                ". Проект имеет структуру Maven-проекта ",
-                ". В проекте использован/не использован - FreeMarker, JSP, JSTL "
-        };
-
-        ClassChecker[] classCheckers = new ClassChecker[]{
-                new EntityFieldChecker(),
-                new HashExistenceChecker(),
-                new MappingChecker(),
-                new ORMChecker(),
-                new PackageMappingChecker(),
-                new POJOChecker(),
-                new RepositoryChecker(),
-                new SpringSecurityExistenceChecker()
-        };
-
-        ClassChecker[] testCheckers = new ClassChecker[]{
-                new MockChecker(),
-                new UnitTestChecker()
-        };
-
-        FileChecker[] fileCheckers = new FileChecker[]{
-                new MavenStructureExistenceChecker(),
-                new TemplateExistenceChecker()
-        };
+        tasks = CheckersStorage.checkList;
+        ClassChecker[] classCheckers = CheckersStorage.classCheckers;
+        ClassChecker[] testCheckers = CheckersStorage.testCheckers;
+        FileChecker[] fileCheckers = CheckersStorage.fileCheckers;
 
         final TextField[] tasksF = new TextField[tasks.length];
         final CheckBox[] cbs = new CheckBox[tasks.length];
@@ -81,19 +49,29 @@ public class App extends Application {
                 ClassReader classReader = new ClassReader();
                 File cl = new File(archive.toString() + "\\target\\classes");
                 File te = new File(archive.toString() + "\\target\\test-classes");
-                ArrayList<Class> classes = classReader.getClassesInPackage(cl);
-                ArrayList<Class> tests = classReader.getClassesInPackage(te);
                 ArrayList<String> output = new ArrayList<>();
-                for (int i = 0; i < classCheckers.length; i++) {
-                    if (tasksBool[i]) {
-                        output.add(classCheckers[i].start(classes));
+
+                try {
+                    ArrayList<Class> classes = classReader.getClassesInPackage(cl);
+                    for (int i = 0; i < classCheckers.length; i++) {
+                        if (tasksBool[i]) {
+                            output.add(classCheckers[i].start(classes));
+                        }
                     }
+                } catch (NullPointerException e) {
+                    System.out.println("Отсутствуют классы");
                 }
 
-                for (int i = classCheckers.length; i < tasksBool.length - fileCheckers.length; i++) {
-                    if (tasksBool[i]) {
-                        output.add(testCheckers[i - classCheckers.length].start(tests));
+
+                try {
+                    ArrayList<Class> tests = classReader.getClassesInPackage(te);
+                    for (int i = classCheckers.length; i < tasksBool.length - fileCheckers.length; i++) {
+                        if (tasksBool[i]) {
+                            output.add(testCheckers[i - classCheckers.length].start(tests));
+                        }
                     }
+                } catch (NullPointerException e) {
+                    System.out.println("Отсутствуют тест классы");
                 }
 
                 for (int i = classCheckers.length + testCheckers.length; i < tasksBool.length; i++) {

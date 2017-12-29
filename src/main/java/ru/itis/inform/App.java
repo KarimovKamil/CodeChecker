@@ -106,8 +106,10 @@ public class App extends Application {
                 alert.setTitle("Summary");
                 alert.setHeaderText(null);
                 StringBuilder result = new StringBuilder();
-                for (String s : output) {
-                    result.append(s).append("\n");
+                for (int i = 0; i < output.size(); i++) {
+                    result.append(i + 1);
+                    result.append(output.get(i)).append("\n");
+
                 }
                 alert.setContentText(result.toString());
                 alert.showAndWait();

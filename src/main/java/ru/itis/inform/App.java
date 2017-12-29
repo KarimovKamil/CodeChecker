@@ -85,7 +85,7 @@ public class App extends Application {
                 alert.setHeaderText(null);
                 StringBuilder result = new StringBuilder();
                 for (int i = 0; i < output.size(); i++) {
-                    result.append(i + 1);
+                    result.append(i + 1).append(". ");
                     result.append(output.get(i)).append("\n");
 
                 }
